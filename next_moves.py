@@ -60,11 +60,12 @@ def generate_graph(board,max_d,n):
     for d in range(max_d):
         c = 0
         for b in board:
-            c = c+1
+
             if not c == 0:
                 board = board + generate_next_moves(b,n)
             else:
                 board = generate_next_moves(b,n)
+            c = c+1
             graph[str(b).strip('[]')] = board
     print(c)
     return graph
