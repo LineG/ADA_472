@@ -21,8 +21,6 @@ def compare_2_boards(b1,b2,N):
     while r < N :
         val1 = white_at(b1,r,N)
         val2  = white_at(b2,r,N)
-        print("val1 is ",val1)
-        print("val2 is ",val2)
         #b2 has priority
         if val1 > val2:
             return False
@@ -32,7 +30,7 @@ def compare_2_boards(b1,b2,N):
         else:
             r = r+1
             print(r)
-    print("eq")
+    #they are the same give priority to the first board
     return True
 
 def flip_adjacent(board,i,n):
@@ -55,6 +53,23 @@ def flip_adjacent(board,i,n):
 
     return board
 
+def generate_graph(board,max_d,n):
+    graph = {}
+    board = [board]
+
+    for d in range(max_d):
+        c = 0
+        for b in board:
+
+            if not c == 0:
+                board = board + generate_next_moves(b,n)
+            else:
+                board = generate_next_moves(b,n)
+            c = c+1
+            graph[str(b).strip('[]')] = board
+    print(c)
+    return graph
+
 def generate_next_moves(b,n):
     out = []
     N = n*n
@@ -76,19 +91,21 @@ def example_output():
     print("the initial array is:\n",b)
 
     n = 4
-    return generate_next_moves(b,n)
+    max_d = 3
+    return generate_graph(b,max_d,n)
 
 
 if __name__== "__main__":
-    # out = example_output()
+    out = example_output()
+    #print(out)
     # for b in range(len(out)):
     #     print("child number ",b+1)
     #     print(out[b])
 
-    b1 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,0,0,0])
-    b2 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,1,0,0])
-    b = compare_2_boards(b1,b2,16)
-    print(b1)
-    print(b2)
-    print(b)
+    # b1 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,0,0,0])
+    # b2 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,1,0,0])
+    # b = compare_2_boards(b1,b2,16)
+    # print(b1)
+    # print(b2)
+    # print(b)
 
