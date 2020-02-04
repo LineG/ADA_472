@@ -34,24 +34,26 @@ def compare_2_boards(b1,b2,N):
     return True
 
 def flip_adjacent(board,i,n):
+    b_new = copy.copy(board)
+    N = n*n
     #right
     i_r = i+1
-    if not i_r>n:
-        board[i_r] = not (board[i_r])
+    if not i_r>N-1:
+        b_new[i_r] = not (board[i_r])
     #left
     i_l = i-1
     if not i_l<0:
-        board[i_l] = not (board[i_l])
+        b_new[i_l] = not (board[i_l])
     #top
     i_t = i-n
     if not i_t<0:
-        board[i_t] = not (board[i_t])
+        b_new[i_t] = not (board[i_t])
     #down
     i_d = i+n
-    if not i_d>n:
-        board[i_d] = not (board[i_d])
+    if not i_d>N-1:
+        b_new[i_d] = not (board[i_d])
 
-    return board
+    return b_new
 
 def generate_graph(board,max_d,n):
     graph = {}
@@ -88,18 +90,18 @@ def generate_next_moves(b,n):
 
 #to be deleted
 def example_output():
-    b = np.array([1,1,1,0,1,0,0,1,1,1,0,0,0,1,1,1])
+    b = np.array([0,0,0,0,0,0,1,0,0,1,1,1,0,0,1,0])
+
     print("the initial array is:\n",b)
 
     n = 4
-    max_d = 4
+    max_d = 3
     return generate_graph(b,max_d,n)
 
 
 if __name__== "__main__":
     out = example_output()
-    #print(out)
-
+    # print(out)
     # b1 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,0,0,0])
     # b2 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,1,0,0])
     # b = compare_2_boards(b1,b2,16)
