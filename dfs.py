@@ -6,7 +6,7 @@ graph = {
 
 def DFS(graph, start, goal, explored, path_so_far):
     # Returns path from start to goal in graph as a string
-    explored.add(start)
+    explored.append(start)
     if start == goal:
         return path_so_far + ' -> ' + start
     if start in graph:
@@ -20,5 +20,5 @@ def DFS(graph, start, goal, explored, path_so_far):
                   return p
     return ""
 
-dfs_solution = DFS(graph, '0 0 0 0 0 0 1 0 0 1 1 1 0 0 1 0', '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0', set(), "")
+dfs_solution = DFS(graph, '0 0 0 0 0 0 1 0 0 1 1 1 0 0 1 0', '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0', [], "")
 print(dfs_solution)
