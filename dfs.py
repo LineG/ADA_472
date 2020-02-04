@@ -3,8 +3,8 @@ import numpy as np
 def DFS(graph, start, goal, explored, path_so_far):
     # Returns path from start to goal in graph as a string
     explored.append(start)
-    print(f'Visited State: {start}')
-    print(f'Closed List: {explored}')
+    # print(f'Visited State: {start}')
+    # print(f'Closed List: {explored}')
     if start == goal:
         return path_so_far + ' -> ' + start
     if start in graph:
