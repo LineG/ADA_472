@@ -57,17 +57,18 @@ def generate_graph(board,max_d,n):
     graph = {}
     board = [board]
 
-    for d in range(max_d):
+    for d in range(max_d-1):
         c = 0
         for b in board:
-
+            children = []
             if not c == 0:
-                board = board + generate_next_moves(b,n)
+                children = generate_next_moves(b,n)
+                board = board + children
             else:
-                board = generate_next_moves(b,n)
-            c = c+1
-            graph[str(b).strip('[]')] = board
-    print(c)
+                children = generate_next_moves(b,n)
+                board = children
+            c = c+len(children)
+            graph[str(b).strip('[]')] = children
     return graph
 
 def generate_next_moves(b,n):
@@ -91,16 +92,13 @@ def example_output():
     print("the initial array is:\n",b)
 
     n = 4
-    max_d = 3
+    max_d = 4
     return generate_graph(b,max_d,n)
 
 
 if __name__== "__main__":
     out = example_output()
     #print(out)
-    # for b in range(len(out)):
-    #     print("child number ",b+1)
-    #     print(out[b])
 
     # b1 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,0,0,0])
     # b2 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,1,0,0])
