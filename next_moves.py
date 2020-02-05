@@ -1,4 +1,5 @@
 import numpy as np
+from typing import List
 import copy
 
 # 1 --> black side
@@ -32,6 +33,57 @@ def compare_2_boards(b1,b2,N):
             print(r)
     #they are the same give priority to the first board
     return True
+
+
+def sort_children(children: List[np.array], low: int, high: int, n: int) -> None:
+    pivot = find_median_pivot(low, high, children, n)
+    left_point = low
+    right_point = high
+
+    while left_point <= right_point:
+        while not compare_2_boards(children[left_point], children[pivot], n):
+            left_point += 1
+
+        while compare_2_boards(children[left_point], children[pivot], n):
+            right_point += 1
+
+        if left_point <= right_point:
+            children[left_point], children[right_point] = children[right_point], children[left_point]
+            left_point += 1
+            right_point -= 1
+
+    if low < right_point:
+        sort_children(children, low, right_point, n)
+
+    if high > left_point:
+        sort_children(children, left_point, high, n)
+    pass
+
+
+def find_median_pivot(low: int, high: int, children: List[np.array], n: int) -> int:
+    first = children[low]
+    last = children[high]
+    middle = children[int((high + low) / 2)]
+
+    median = [first, middle, last]
+
+    if compare_2_boards(median[0], median[1], n):
+        median[0], median[1] = median[1], median[0]
+
+    if compare_2_boards(median[1], median[2], n):
+        median[1], median[2] = median[2], median[1]
+
+    if compare_2_boards(median[0], median[1], n):
+        median[0], median[1] = median[1], median[0]
+
+    pivot = 0
+    for i in range(0, len(children)):
+        if median[1] == children[i]:
+            pivot = i
+
+    return pivot
+    pass
+
 
 def flip_adjacent(board,i,n):
     b_new = copy.copy(board)
