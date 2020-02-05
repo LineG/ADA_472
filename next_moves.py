@@ -34,16 +34,19 @@ def compare_2_boards(b1,b2,N):
     return True
 
 
-def sort_children(children: List[np.array], low: int, high: int) -> None:
+def sort_children(children, low: int, high: int,N:int) -> None:
     pivot = find_median_pivot(low, high, children)
     left_point = low
     right_point = high
 
     while left_point <= right_point:
-        while compare_2_boards(children[left_point], children[pivot], 16):
-            left_point += 1
 
-        while not compare_2_boards(children[right_point], children[pivot], 16):
+        while compare_2_boards(children[left_point], children[pivot], N):
+            left_point += 1
+            if(left_point>15):
+                break
+
+        while not compare_2_boards(children[right_point], children[pivot], N):
             right_point -= 1
 
         if left_point <= right_point:
@@ -52,10 +55,10 @@ def sort_children(children: List[np.array], low: int, high: int) -> None:
             right_point -= 1
 
     if low < right_point:
-        sort_children(children, low, right_point)
+        sort_children(children, low, right_point,N)
 
     if high > left_point:
-        sort_children(children, left_point, high)
+        sort_children(children, left_point, high,N)
     pass
 
 
@@ -151,17 +154,19 @@ def example_output():
 
 
 if __name__== "__main__":
-    # print(out)
+
     b1 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,0,0,0])
-    b2 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,1,0,0])
-    b3 = np.array([0,0,0,1,0,1,1,1,0,0,1,1,0,0,0,1])
-    b4 = np.array([0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
-    board_list = [b1, b2, b3, b4]
-    print('nodes before sorting\n' + board_list.__str__())
-    sort_children(board_list, 0, len(board_list)-1)
-    print('nodes after sorting\n' + board_list.__str__())
-    # b = compare_2_boards(b1,b2,16)
-    # print(b1)
-    # print(b2)
-    # print(b)
+    c1 = generate_next_moves(b1,4)
+    cs = sort_children(c1,0,len(c1)-1,16)
+    print("sorted")
+    for c in cs:
+        print(c)
+    # b2 = [1,1,0,0,1,0,0,1,1,1,0,0,0,1,0,0]
+    # b3 = [0,0,0,1,0,1,1,1,0,0,1,1,0,0,0,1]
+    # b4 = [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    # board_list = [b1, b2, b3, b4]
+    # print('nodes before sorting\n' + board_list.__str__())
+    # sort_children(board_list, 0, len(board_list)-1)
+    # print('nodes after sorting\n' + board_list.__str__())
+
 
