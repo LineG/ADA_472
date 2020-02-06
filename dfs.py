@@ -1,4 +1,5 @@
 import numpy as np
+from next_moves import generate_graph
 
 def DFS(graph, start, goal, explored, path_so_far):
     # Returns path from start to goal in graph as a string
@@ -23,7 +24,8 @@ def DFS(graph, start, goal, explored, path_so_far):
 #     '0 0 0 0 0 0 1 0 0 1 1 1 0 0 1 0': [np.array([0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0]), np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])],
 #     '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0': []
 # }
+b = [1,1,1,0,0,1,0,1,1]
+graph = generate_graph(b,7,3)
+dfs_solution = DFS(graph, '1 1 1 0 0 1 0 1 1', '0 0 0 0 0 0 0 0 0', [], "")
 
-# dfs_solution = DFS(graph, '0 0 0 0 0 0 1 0 0 1 1 1 0 0 1 0', '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0', [], "")
-
-# print(dfs_solution)
+print(dfs_solution)
