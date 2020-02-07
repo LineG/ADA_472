@@ -24,26 +24,28 @@ def compare_2_boards(b1,b2,N):
         val2  = white_at(b2,r,N)
         #b2 has priority
         if val1 > val2:
-            return False
+            return 0
         #b1 has priority (or the 2 have the exact same set up)
         elif val2 > val1:
-            return True
+            return 1
         else:
             r = r+1
     #they are the same give priority to the first board
-    return True
+    return 0
 
 
 def sort_children(children: List[np.array], low: int, high: int) -> None:
-    pivot = find_median_pivot(low, high, children)
+    N = len(children[0])
+    pivot = find_median_pivot(low, high, children,N)
     left_point = low
     right_point = high
 
     while left_point <= right_point:
-        while compare_2_boards(children[left_point], children[pivot], 16):
+        loop = True
+        while compare_2_boards(children[left_point], children[pivot], N):
             left_point += 1
 
-        while not compare_2_boards(children[right_point], children[pivot], 16):
+        while compare_2_boards( children[pivot],children[right_point],N):
             right_point -= 1
 
         if left_point <= right_point:
@@ -59,20 +61,20 @@ def sort_children(children: List[np.array], low: int, high: int) -> None:
     pass
 
 
-def find_median_pivot(low: int, high: int, children: List[np.array]) -> int:
+def find_median_pivot(low: int, high: int, children: List[np.array],N: int) -> int:
     first = children[low]
     last = children[high]
     middle = children[int((high + low) / 2)]
 
     median = [first, middle, last]
 
-    if compare_2_boards(median[0], median[1], 16):
+    if compare_2_boards(median[0], median[1], N):
         median[0], median[1] = median[1], median[0]
 
-    if compare_2_boards(median[1], median[2], 16):
+    if compare_2_boards(median[1], median[2], N):
         median[1], median[2] = median[2], median[1]
 
-    if compare_2_boards(median[0], median[1], 16):
+    if compare_2_boards(median[0], median[1], N):
         median[0], median[1] = median[1], median[0]
 
     pivot = 0
@@ -89,31 +91,40 @@ def flip_adjacent(board,i,n):
     N = n*n
     #right
     i_r = i+1
-    if not i_r>N-1:
-        b_new[i_r] = not (board[i_r])
+    if not (i+1)%n==0:
+        if not i_r>N-1:
+            b_new[i_r] = flip_val(board[i_r])
     #left
     i_l = i-1
-    if not i_l<0:
-        b_new[i_l] = not (board[i_l])
+    if not (i+1)%n==1:
+        if not i_l<0:
+            b_new[i_l] = flip_val(board[i_l])
     #top
     i_t = i-n
     if not i_t<0:
-        b_new[i_t] = not (board[i_t])
+        b_new[i_t] = flip_val(board[i_t])
     #down
     i_d = i+n
     if not i_d>N-1:
-        b_new[i_d] = not (board[i_d])
+        b_new[i_d] = flip_val(board[i_d])
 
     return b_new
 
-def generate_graph(board,max_d,n):
+def flip_val(val)->int:
+    if val == 1:
+        return 0
+    elif val == 0:
+        return 1
+
+
+def generate_graph(b,max_d,n):
     graph = {}
-    board = [board]
+    board = np.array([b])
 
     for d in range(max_d-1):
         c = 0
         for b in board:
-            children = []
+            children = np.array([])
             if not c == 0:
                 children = generate_next_moves(b,n)
                 board = board + children
@@ -122,6 +133,11 @@ def generate_graph(board,max_d,n):
                 board = children
             c = c+len(children)
             graph[str(b).strip('[]')] = children
+            for child in children:
+                if not (str(child).strip('[]') in graph):
+                    graph[str(child).strip('[]')] = []
+
+
     return graph
 
 def generate_next_moves(b,n):
@@ -132,36 +148,20 @@ def generate_next_moves(b,n):
         #make a shallow copy
         b_new = copy.copy(b)
         #flip the center piece
-        b_new[i] = not (b_new[i])
+        b_new[i] = flip_val(b[i])
         #flip adjascent
         b_new = flip_adjacent(b_new,i,n)
         next_moves.append(b_new)
     #return a list
+    sort_children(next_moves,0,len(next_moves)-1)
     return next_moves
 
 #to be deleted
 def example_output():
-    b = np.array([0,0,0,0,0,0,1,0,0,1,1,1,0,0,1,0])
+    b = np.array([0,0,1,1,0,0,1,0,0])
 
     print("the initial array is:\n",b)
 
-    n = 4
-    max_d = 3
+    n = 3
+    max_d = 7
     return generate_graph(b,max_d,n)
-
-
-if __name__== "__main__":
-    # print(out)
-    b1 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,0,0,0])
-    b2 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,1,0,0])
-    b3 = np.array([0,0,0,1,0,1,1,1,0,0,1,1,0,0,0,1])
-    b4 = np.array([0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
-    board_list = [b1, b2, b3, b4]
-    print('nodes before sorting\n' + board_list.__str__())
-    sort_children(board_list, 0, len(board_list)-1)
-    print('nodes after sorting\n' + board_list.__str__())
-    # b = compare_2_boards(b1,b2,16)
-    # print(b1)
-    # print(b2)
-    # print(b)
-
