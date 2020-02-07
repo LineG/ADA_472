@@ -121,7 +121,7 @@ def generate_graph(b,max_d,n):
     graph = {}
     board = np.array([b])
 
-    for d in range(max_d):
+    for d in range(max_d-1):
         print(d)
         c = 0
         for b in board:
