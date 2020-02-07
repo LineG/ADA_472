@@ -1,5 +1,5 @@
 import numpy as np
-from next_moves import generate_graph
+from next_moves import generate_graph,flip_adjacent
 
 def DFS(graph, start, goal, explored, path_so_far):
     # Returns path from start to goal in graph as a string
@@ -17,15 +17,22 @@ def DFS(graph, start, goal, explored, path_so_far):
                 p = DFS(graph, str(w).strip('[]'), goal, explored, start)
               if p:
                   return p
-    return ""
+    return "no solution"
 
 
 # graph = {
-#     '0 0 0 0 0 0 1 0 0 1 1 1 0 0 1 0': [np.array([0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0]), np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])],
-#     '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0': []
+#     '0 1 0 1 1 1 0 1 0': [np.array([0,0,0,0,0,0,0,0,0]),np.array([0,0,0,1,0,1,1,0,1])],
+#     '0 0 0 0 0 0 0 0 0': []
 # }
-b = [1,1,1,0,0,1,0,1,1]
-graph = generate_graph(b,7,3)
-dfs_solution = DFS(graph, '1 1 1 0 0 1 0 1 1', '0 0 0 0 0 0 0 0 0', [], "")
 
+b = [1,1,1,1,1,0,1,1,0]
+
+
+graph = generate_graph(b,3,3)
+for c in graph:
+    print(c)
+    print(graph[c])
+
+
+dfs_solution = DFS(graph,'1 1 1 1 1 0 1 1 0','0 0 0 0 0 0 0 0 0',[],"")
 print(dfs_solution)

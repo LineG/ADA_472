@@ -24,10 +24,10 @@ def compare_2_boards(b1,b2,N):
         val2  = white_at(b2,r,N)
         #b2 has priority
         if val1 > val2:
-            return 1
+            return 0
         #b1 has priority (or the 2 have the exact same set up)
         elif val2 > val1:
-            return 0
+            return 1
         else:
             r = r+1
     #they are the same give priority to the first board
@@ -91,31 +91,41 @@ def flip_adjacent(board,i,n):
     N = n*n
     #right
     i_r = i+1
-    if not i_r>N-1:
-        b_new[i_r] = not (board[i_r])
+    if not (i+1)%n==0:
+        if not i_r>N-1:
+            b_new[i_r] = flip_val(board[i_r])
     #left
     i_l = i-1
-    if not i_l<0:
-        b_new[i_l] = not (board[i_l])
+    if not (i+1)%n==1:
+        if not i_l<0:
+            b_new[i_l] = flip_val(board[i_l])
     #top
     i_t = i-n
     if not i_t<0:
-        b_new[i_t] = not (board[i_t])
+        b_new[i_t] = flip_val(board[i_t])
     #down
     i_d = i+n
     if not i_d>N-1:
-        b_new[i_d] = not (board[i_d])
+        b_new[i_d] = flip_val(board[i_d])
 
     return b_new
 
-def generate_graph(board,max_d,n):
-    graph = {}
-    board = [board]
+def flip_val(val)->int:
+    if val == 1:
+        return 0
+    elif val == 0:
+        return 1
 
-    for d in range(max_d-1):
+
+def generate_graph(b,max_d,n):
+    graph = {}
+    board = np.array([b])
+
+    for d in range(max_d):
+        print(d)
         c = 0
         for b in board:
-            children = []
+            children = np.array([])
             if not c == 0:
                 children = generate_next_moves(b,n)
                 board = board + children
@@ -134,7 +144,7 @@ def generate_next_moves(b,n):
         #make a shallow copy
         b_new = copy.copy(b)
         #flip the center piece
-        b_new[i] = not (b_new[i])
+        b_new[i] = flip_val(b[i])
         #flip adjascent
         b_new = flip_adjacent(b_new,i,n)
         next_moves.append(b_new)
@@ -151,31 +161,3 @@ def example_output():
     n = 3
     max_d = 7
     return generate_graph(b,max_d,n)
-print(example_output())
-
-# if __name__== "__main__":
-
-    #out = example_output()
-    # b1 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,0,0,0])
-    # c1 = generate_next_moves(b1,4)
-    # sort_children(c1,0,len(c1)-1)
-    # for c in c1:
-    #     print(c)
-
-    # b2 = np.array([1,1,0,0,1,0,0,1,1,1,0,0,0,1,0,0])
-    # b3 = np.array([0,0,0,1,0,1,1,1,0,0,1,1,0,0,0,1])
-    # b4 = np.array([0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
-
-    # c1 = generate_next_moves(b4,4)
-    # sort_children(c1,0,len(c1)-1)
-    # for c in c1:
-    #     print(c)
-    # board_list = [b1, b2, b3, b4]
-    # print('nodes before sorting\n' + board_list.__str__())
-    # sort_children(board_list, 0, len(board_list)-1)
-    # print('nodes after sorting\n' + board_list.__str__())
-    # b = compare_2_boards(b1,b2,16)
-    # print(b1)
-    # print(b2)
-    # print(b)
-
