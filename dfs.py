@@ -66,7 +66,7 @@ def dfs(graph, start, goal, explored, path_so_far, level):
     explored.append(start)
 
     if level > MAX_D:
-        return ""
+        return "",""
 
     if start == goal:
         return path_so_far + find_move(np.fromstring(explored[-2], dtype=int, sep=' '),
@@ -77,14 +77,14 @@ def dfs(graph, start, goal, explored, path_so_far, level):
             str_w = str(w).strip('[]')
             if str_w not in explored:
                 if path_so_far is not "":
-                    p = dfs(graph, w, goal, explored,
+                    p,s = dfs(graph, w, goal, explored,
                             path_so_far + find_move(w, np.fromstring(start, dtype=int, sep=' ')) + '\t' + start + '\n',
                             level + 1)
                 else:
-                    p = dfs(graph, w, goal, explored, '0\t' + start + '\n', level)
+                    p,s = dfs(graph, w, goal, explored, '0\t' + start + '\n', level)
                 if p:
-                    return p
-    return "no solution", get_search_path(explored)
+                    return p,s
+    return "", get_search_path(explored)
 
 
 def start_dfs(b, goal, max_d, n):
