@@ -20,10 +20,7 @@ def find_move(before: np.array, after: np.array, is_goal: bool = False) -> str:
                 pass
             pass
         pass
-    if is_goal:
-        return get_letter(flipped_rows, n) + '' + str(statistics.mode(flipped_columns) + 1)
-    else:
-        return get_letter(flipped_rows, n) + '' + str(statistics.mode(flipped_columns))
+    return get_letter(flipped_rows, n) + '' + str(statistics.mode(flipped_columns) + 1)
     pass
 
 
@@ -66,25 +63,30 @@ def dfs(graph, start, goal, explored, path_so_far, level):
     explored.append(start)
 
     if level > MAX_D:
-        return "",""
+        return "", get_search_path(explored)
 
     if start == goal:
-        return path_so_far + find_move(np.fromstring(explored[-2], dtype=int, sep=' '),
-                                       np.fromstring(start, dtype=int, sep=' '), True) + "\t" + start, get_search_path(
-            explored)
+        if len(explored) < 2:
+            return '0\t' + start, get_search_path(explored)
+        else:
+            return path_so_far + find_move(np.fromstring(start, dtype=int, sep=' '), np.fromstring(explored[-2], dtype=int, sep=' ')) + '\t' + start + '\n', get_search_path(explored)
+
     if start in graph:
         for w in graph[start]:
             str_w = str(w).strip('[]')
             if str_w not in explored:
                 if path_so_far is not "":
                     p,s = dfs(graph, w, goal, explored,
-                            path_so_far + find_move(w, np.fromstring(start, dtype=int, sep=' ')) + '\t' + start + '\n',
+                            path_so_far + find_move(np.fromstring(path_so_far[-N**2*2:], dtype=int, sep=' '), np.fromstring(start, dtype=int, sep=' ')) + '\t' + start + '\n',
                             level + 1)
                 else:
-                    p,s = dfs(graph, w, goal, explored, '0\t' + start + '\n', level)
+                    p, s = dfs(graph, w, goal, explored, '0\t' + start + '\n', level)
                 if p:
-                    return p,s
-    return "", get_search_path(explored)
+                    return p, s
+    if start == goal:
+        return path_so_far, get_search_path(explored)
+    else:
+        return "", get_search_path(explored)
 
 
 def start_dfs(b, goal, max_d, n):
