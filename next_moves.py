@@ -134,6 +134,11 @@ def generate_graph(b,max_d,n):
                 board = children
             c = c+len(children)
             graph[str(b).strip('[]')] = children
+            for child in children:
+                if not (str(child).strip('[]') in graph):
+                    graph[str(child).strip('[]')] = []
+
+
     return graph
 
 def generate_next_moves(b,n):

@@ -2,9 +2,11 @@ from typing import List
 import statistics
 import numpy as np
 from next_moves import generate_graph, flip_adjacent
+from next_moves import generate_graph, flip_adjacent, generate_next_moves
+import copy
 
 
-def find_move(before: np.array, after: np.array) -> str:
+def find_move(before: np.array, after: np.array, is_goal: bool = False) -> str:
     difference = abs(before - after)
     n = int(len(difference) ** (1 / 2))
     difference = np.split(difference, n)
@@ -18,8 +20,10 @@ def find_move(before: np.array, after: np.array) -> str:
                 pass
             pass
         pass
-    return get_letter(flipped_rows, n) + '' + str(statistics.mode(flipped_columns) + 1)
-
+    if is_goal:
+        return get_letter(flipped_rows, n) + '' + str(statistics.mode(flipped_columns) + 1)
+    else:
+        return get_letter(flipped_rows, n) + '' + str(statistics.mode(flipped_columns))
     pass
 
 
@@ -33,33 +37,62 @@ def get_letter(flipped_rows: List[int], n: int) -> chr:
     pass
 
 
-def DFS(graph, start, goal, explored, path_so_far):
+def children_node(graph, b):
+    children = np.array([])
+
+    children = generate_next_moves(b, N)
+    board = children
+
+    graph[str(b).strip('[]')] = children
+    for child in children:
+        if not (str(child).strip('[]') in graph):
+            graph[str(child).strip('[]')] = []
+
+
+def get_search_path(explored: List[str]) -> str:
+    search_path = ''
+    for node in explored:
+        search_path += '0 0 0\t' + node + '\n'
+    return search_path
+    pass
+
+
+def dfs(graph, start, goal, explored, path_so_far, level):
     # Returns path from start to goal in graph as a string
+    if not level > MAX_D:
+        children_node(graph, start)
+    print("generating nodes on level ", level)
+    start = str(start).strip('[]')
     explored.append(start)
-    # print(f'Visited State: {start}')
-    # print(f'Closed List: {explored}')
+
+    if level > MAX_D:
+        return ""
+
     if start == goal:
-        return path_so_far + find_move(np.fromstring(explored[-2], dtype=int, sep=' '), np.fromstring(start, dtype=int, sep=' ')) + "\t" + start
+        return path_so_far + find_move(np.fromstring(explored[-2], dtype=int, sep=' '),
+                                       np.fromstring(start, dtype=int, sep=' '), True) + "\t" + start, get_search_path(
+            explored)
     if start in graph:
         for w in graph[start]:
-            if str(w).strip('[]') not in explored:
-                if (path_so_far is not ""):
-                    p = DFS(graph, str(w).strip('[]'), goal, explored, path_so_far + find_move(np.fromstring(explored[-2], dtype=int, sep=' '), np.fromstring(start, dtype=int, sep=' ')) + "\t" + start + "\n")
+            str_w = str(w).strip('[]')
+            if str_w not in explored:
+                if path_so_far is not "":
+                    p = dfs(graph, w, goal, explored,
+                            path_so_far + find_move(w, np.fromstring(start, dtype=int, sep=' ')) + '\t' + start + '\n',
+                            level + 1)
                 else:
-                    p = DFS(graph, str(w).strip('[]'), goal, explored, "0\t" + start + "\n")
+                    p = dfs(graph, w, goal, explored, '0\t' + start + '\n', level)
                 if p:
                     return p
-    return "no solution"
+    return "no solution", get_search_path(explored)
 
 
-# graph = {
-#     '0 1 0 1 1 1 0 1 0': [np.array([0,0,0,0,0,0,0,0,0]),np.array([0,0,0,1,0,1,1,0,1])],
-#     '0 0 0 0 0 0 0 0 0': []
-# }
-
-b = [1, 1, 1, 0, 0, 1, 0, 1, 1]
-
-graph = generate_graph(b, 7, 3)
-
-dfs_solution = DFS(graph, '1 1 1 0 0 1 0 1 1', '0 0 0 0 0 0 0 0 0', [], "")
-print(dfs_solution)
+def start_dfs(b, goal, max_d, n):
+    g = {}
+    # graph(g,b)
+    global MAX_D
+    MAX_D = max_d
+    global N
+    N = n
+    p = dfs(g, b, goal, [], "", 1)
+    return p
