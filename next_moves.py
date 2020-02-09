@@ -121,7 +121,8 @@ def generate_graph(b,max_d,n):
     graph = {}
     board = np.array([b])
 
-    for d in range(max_d-1):
+    for d in range(max_d):
+        print("building level " + str(d+1))
         c = 0
         for b in board:
             children = np.array([])
