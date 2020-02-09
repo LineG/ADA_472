@@ -6,7 +6,7 @@ def run_dfs(tokens, i):
     n, max_d = int(tokens[0]), int(tokens[1])
     search = open(f'{i}_dfs_search.txt', 'w+')
     solution = open(f'{i}_dfs_solution.txt', 'w+')
-    dfs_results = start_dfs(np.array(list(tokens[3].replace('\n', "")), dtype=int), " ".join(n ** 2 * '0 '[:-1]), max_d, n)
+    dfs_results = start_dfs(np.array(list(tokens[3].strip('\n')), dtype=int), " ".join(n ** 2 * '0 '[:-1]), max_d, n)
     if dfs_results[0] == '':
         solution.write('no solution')
     else:

@@ -40,10 +40,10 @@ def children_node(graph, b):
     children = generate_next_moves(b, N)
     board = children
 
-    graph[str(b).strip('[]')] = children
+    graph[str(b).strip('[]').replace('\n', '')] = children
     for child in children:
         if not (str(child).strip('[]') in graph):
-            graph[str(child).strip('[]')] = []
+            graph[str(child).strip('[]').replace('\n','')] = []
 
 
 def get_search_path(explored: List[str]) -> str:
@@ -59,7 +59,7 @@ def dfs(graph, start, goal, explored, path_so_far, level):
     if not level > MAX_D:
         children_node(graph, start)
     print("generating nodes on level ", level)
-    start = str(start).strip('[]')
+    start = str(start).strip('[]').replace('\n', '')
     explored.append(start)
 
     if level > MAX_D:
@@ -73,7 +73,7 @@ def dfs(graph, start, goal, explored, path_so_far, level):
 
     if start in graph:
         for w in graph[start]:
-            str_w = str(w).strip('[]')
+            str_w = str(w).strip('[]').replace('\n', '')
             if str_w not in explored:
                 if path_so_far is not "":
                     p,s = dfs(graph, w, goal, explored,
