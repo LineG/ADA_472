@@ -5,7 +5,7 @@ https://github.com/LineG/ADA_472
 AI _ WINTER 2020 Concordia University
 ### Project 1
 The current version is only for delivrable 1:
-    > DFS algorithm
+> DFS algorithm
 
 ### Team Members
 - Line Ghanem 27280076
@@ -22,4 +22,4 @@ The current version is only for delivrable 1:
     > python3 run.py
 4. The output will be displayed in 2 separate files per board:
     - if 2 boards were entered in the 'puzzles.txt' the output files would be:
-    - 0_dfs_search.txt 0_dfs_solution.txt 1_dfs_search.txt 1_dfs_solution.txt 
+    - 0_dfs_search.txt  0_dfs_solution.txt  1_dfs_search.txt    1_dfs_solution.txt 
