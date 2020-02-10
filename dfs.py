@@ -1,3 +1,8 @@
+# Line Ghanem 27280076
+# Anthony Iatropoulos 40028246
+# Mikael Samvelian 40003178
+
+
 from typing import List
 import statistics
 import numpy as np
@@ -58,7 +63,7 @@ def dfs(graph, start, goal, explored, path_so_far, level):
     # Returns path from start to goal in graph as a string
     if not level > MAX_D:
         children_node(graph, start)
-    print("generating nodes on level ", level)
+    #print("generating nodes on level ", level)
     start = str(start).strip('[]').replace('\n', '')
     explored.append(start)
 
