@@ -1,3 +1,7 @@
+# Line Ghanem 27280076
+# Anthony Iatropoulos 40028246
+# Mikael Samvelian 40003178
+
 import numpy as np
 from typing import List
 import copy
@@ -156,13 +160,3 @@ def generate_next_moves(b,n):
     #return a list
     sort_children(next_moves,0,len(next_moves)-1)
     return next_moves
-
-#to be deleted
-def example_output():
-    b = np.array([0,0,1,1,0,0,1,0,0])
-
-    print("the initial array is:\n",b)
-
-    n = 3
-    max_d = 7
-    return generate_graph(b,max_d,n)

@@ -1,3 +1,8 @@
+# Line Ghanem 27280076
+# Anthony Iatropoulos 40028246
+# Mikael Samvelian 40003178
+
+
 from dfs import start_dfs
 import numpy as np
 
