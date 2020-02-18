@@ -27,14 +27,6 @@ def toggle(state, i, j):
 
 	return new_state
 
-def find_path(parent, start, end):
-		path = [end]
-		while path[-1] != start:
-			path.append(parent[str(path[-1])])
-		path.reverse()
-		return path
-
-
 def run_bfs(start_state, end_state):
 	stack = [start_state,[]]
 	explored = {}
@@ -49,7 +41,6 @@ def run_bfs(start_state, end_state):
 		else:
 			val = getStateVal(state)
 			if val == 0:
-				# return find_path(parent, start_state, end_state)
 				break
 			if val not in explored:
 				explored[val] = True
@@ -57,7 +48,6 @@ def run_bfs(start_state, end_state):
 					for j in range(len(state)):
 						new_state = toggle(state, i, j)
 						stack.append(new_state)
-						parent[str(new_state)] = state
 	# print(parent)
 	# print(explored)
 
