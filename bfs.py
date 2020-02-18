@@ -1,4 +1,4 @@
-def getStateVal(state):
+def getStateVal(state) -> int:
 	val = 0
 	base = 1
 	for i in range(len(state)):
@@ -27,49 +27,50 @@ def toggle(state, i, j):
 
 	return new_state
 
-def find_path(graph, solution_index, start_state, path):
-	if graph[solution_index] != start_state:
-		path.insert(0, graph[solution_index])
-		if solution_index % 9 == 0 and solution_index > 0:
-			new_index = solution_index // 9 - 1
+
+def run_bfs(start_node, goal_node):
+	queue = [start_node,[]]
+	explored = {}
+	level = 0
+
+	# Return empty path if start is equal to goal
+	if start_node == goal_node:
+		return []
+
+	while len(queue) > 0:
+		path = queue.pop(0)
+
+		if level == 0:
+			node = path
 		else:
-			new_index = solution_index // 9
-		find_path(graph, new_index, start_state, path)
-	else:
-		path.insert(0, start_state)
-	return path
+			try:
+				node = path[-1]
+			except Exception:
+				node = []
+				pass
 
+		if len(node) == 0:
+			level += 1
+			queue.append(node)
 
-def run_bfs(start_state):
-	stack = [start_state,[]]
-	# explored = {}
-	graph = {0: start_state}
-	solution_counter = -1
-	counter = 0
-
-	while len(stack) > 0:
-		state = stack[0]
-		# print(state)
-		stack.pop(0)
-		if len(state) == 0:
-			stack.append(state)
 		else:
-			val = getStateVal(state)
-			solution_counter += 1
-			if val == 0:
-				break
-			# if val not in explored:
-			# 	explored[val] = True
-			for i in range(len(state)):
-				for j in range(len(state)):
-					new_state = toggle(state, i, j)
-					stack.append(new_state)
-					counter = counter + 1
-					graph[counter] = new_state
-	print(counter)
-	print(solution_counter)
-	# print(graph)
-	solution = find_path(graph, solution_counter, start_state, [])
-	print(solution)
+			val = getStateVal(node)
+			if val not in explored:
 
-run_bfs([[1,1,0],[0,1,1],[1,1,0]])
+				# Mark node as explored
+				explored[val] = True
+
+				for row in range(len(node)):
+					for col in range(len(node)):
+						child = toggle(node, row, col)
+						new_path = list(path)
+						new_path.append(child)
+						queue.append(new_path)
+						if child == goal_node:
+							level+=1
+							print(level)
+							return new_path
+	# No solution found
+	return []
+
+print(run_bfs([[0,0,0],[1,0,1],[0,1,0]], [[0,0,0],[0,0,0],[0,0,0]]))
