@@ -30,7 +30,6 @@ def toggle(state, i, j):
 def run_bfs(start_state, end_state):
 	stack = [start_state,[]]
 	explored = {}
-	parent = {}
 
 	while len(stack) > 0:
 		state = stack[0]
@@ -48,7 +47,6 @@ def run_bfs(start_state, end_state):
 					for j in range(len(state)):
 						new_state = toggle(state, i, j)
 						stack.append(new_state)
-	# print(parent)
 	# print(explored)
 
 run_bfs([[1,1,0],[0,1,1],[1,1,0]], [[0,0,0],[0,0,0],[0,0,0]])
