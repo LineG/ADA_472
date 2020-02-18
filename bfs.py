@@ -1,34 +1,69 @@
-def getStateVal(state) -> int:
+def getNodeVal(node) -> int:
+	"""Function that converts a node to an integer.
+	Ex: [[0,0,0],[1,0,1],[0,1,0]] -> 1*0 + 2*0 + 4*0 + 8*1 + 16*0 + 32*1 + 64*0 + 128*1 + 256*0 -> 168
+
+	Args:
+			node: The node to be converted to a value.
+
+	Returns:
+			The return value. Integer representation of node.
+	"""
 	val = 0
 	base = 1
-	for i in range(len(state)):
-		for j in range(len(state[0])):
-			val += base * state[i][j]
+	for row in range(len(node)):
+		for col in range(len(node[0])):
+			val += base * node[row][col]
 			base = base * 2
 	return val
 
 def toggle_bit(bit):
+	"""Function that inverts bits.
+
+	Args:
+			bit: The bit to be inverted.
+
+	Returns:
+			The return value. 0 if bit was 1 and 1 if bit was 0.
+	"""
 	return 1 if bit == 0 else 0
 
-def toggle(state, i, j):
-	new_state = []
-	for r in state:
-		new_state.append([c for c in r])
+def toggle(node, row, col):
+	"""Function that toggles a node at a certain row and col and returns child.
 
-	new_state[i][j] = toggle_bit(new_state[i][j])
-	if i+1 < len(state):
-		new_state[i+1][j] = toggle_bit(new_state[i+1][j])
-	if i-1 >= 0:
-		new_state[i-1][j] = toggle_bit(new_state[i-1][j])
-	if j+1 < len(state[0]):
-		new_state[i][j+1] = toggle_bit(new_state[i][j+1])
-	if j-1 >= 0:
-		new_state[i][j-1] = toggle_bit(new_state[i][j-1])
+	Args:
+			node: The node to be toggled.
+			row, col:	The row and col pair to toggle.
 
-	return new_state
+	Returns:
+			The child of the node.
+	"""
+	new_node = []
+	for r in node:
+		new_node.append([c for c in r])
+
+	new_node[row][col] = toggle_bit(new_node[row][col])
+	if row+1 < len(node):
+		new_node[row+1][col] = toggle_bit(new_node[row+1][col])
+	if row-1 >= 0:
+		new_node[row-1][col] = toggle_bit(new_node[row-1][col])
+	if col+1 < len(node[0]):
+		new_node[row][col+1] = toggle_bit(new_node[row][col+1])
+	if col-1 >= 0:
+		new_node[row][col-1] = toggle_bit(new_node[row][col-1])
+
+	return new_node
 
 
-def run_bfs(start_node, goal_node):
+def bfs(start_node, goal_node):
+	"""Breadth-first search (BFS) function.
+
+	Args:
+			start_node: The beginning node.
+			goal_node: The node to try and reach.
+
+	Returns:
+			The path (list) taken to reach the node if any.
+	"""
 	queue = [start_node,[]]
 	explored = {}
 	level = 0
@@ -37,12 +72,14 @@ def run_bfs(start_node, goal_node):
 	if start_node == goal_node:
 		return []
 
+	# Keep exploring while the queue has nodes
 	while len(queue) > 0:
 		path = queue.pop(0)
 
 		if level == 0:
 			node = path
 		else:
+			# To keep track of levels an empty node gets popped between levels which will cause an exception
 			try:
 				node = path[-1]
 			except Exception:
@@ -54,7 +91,7 @@ def run_bfs(start_node, goal_node):
 			queue.append(node)
 
 		else:
-			val = getStateVal(node)
+			val = getNodeVal(node)
 			if val not in explored:
 
 				# Mark node as explored
@@ -68,9 +105,9 @@ def run_bfs(start_node, goal_node):
 						queue.append(new_path)
 						if child == goal_node:
 							level+=1
-							print(level)
+							# print(level)
 							return new_path
 	# No solution found
 	return []
 
-print(run_bfs([[0,0,0],[1,0,1],[0,1,0]], [[0,0,0],[0,0,0],[0,0,0]]))
+print(bfs([[0,0,0],[1,0,1],[0,1,0]], [[0,0,0],[0,0,0],[0,0,0]]))
