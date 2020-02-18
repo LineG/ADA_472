@@ -58,7 +58,7 @@ def run_bfs(start_state, end_state):
 						new_state = toggle(state, i, j)
 						stack.append(new_state)
 						parent[str(new_state)] = state
-	# solution = find_path(graph, solution_counter, start_state, [])
-	# print(solution)
+	# print(parent)
+	# print(explored)
 
 run_bfs([[1,1,0],[0,1,1],[1,1,0]], [[0,0,0],[0,0,0],[0,0,0]])
