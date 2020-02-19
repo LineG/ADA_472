@@ -56,7 +56,7 @@ def toggle(node, row, col) -> "child":
 	return new_node
 
 
-def bfs(start_node, goal_node) -> "solution path":
+def bfs(start_node, goal_node, max_depth) -> "solution path":
 	"""Breadth-first search (BFS) function.
 
 	Args:
@@ -90,6 +90,9 @@ def bfs(start_node, goal_node) -> "solution path":
 
 		if len(node) == 0:
 			level += 1
+			# Return empty list if max depth was rached
+			if max_depth == level:
+				return []
 			queue.append(node)
 
 		else:
@@ -113,4 +116,7 @@ def bfs(start_node, goal_node) -> "solution path":
 	return []
 
 # Test BFS
-# print(bfs([[1,1,0,1],[1,1,0,0],[0,1,1,0],[0,1,1,0]], [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]))
+# max_depth = 6
+# start_node = [[1,1,0,1],[1,1,0,0],[0,1,1,0],[0,1,1,0]]
+# goal_node = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+# print(bfs(start_node, goal_node, max_depth))
