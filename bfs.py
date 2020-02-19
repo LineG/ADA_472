@@ -16,7 +16,8 @@ def getNodeVal(node) -> int:
 			base = base * 2
 	return val
 
-def toggle_bit(bit):
+
+def toggle_bit(bit) -> int:
 	"""Function that inverts bits.
 
 	Args:
@@ -27,7 +28,8 @@ def toggle_bit(bit):
 	"""
 	return 1 if bit == 0 else 0
 
-def toggle(node, row, col):
+
+def toggle(node, row, col) -> "child":
 	"""Function that toggles a node at a certain row and col and returns child.
 
 	Args:
@@ -54,7 +56,7 @@ def toggle(node, row, col):
 	return new_node
 
 
-def bfs(start_node, goal_node):
+def bfs(start_node, goal_node) -> "solution path":
 	"""Breadth-first search (BFS) function.
 
 	Args:
@@ -110,4 +112,5 @@ def bfs(start_node, goal_node):
 	# No solution found
 	return []
 
-print(bfs([[0,0,0],[1,0,1],[0,1,0]], [[0,0,0],[0,0,0],[0,0,0]]))
+# Test BFS
+# print(bfs([[1,1,0,1],[1,1,0,0],[0,1,1,0],[0,1,1,0]], [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]))
