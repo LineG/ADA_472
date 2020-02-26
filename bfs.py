@@ -1,3 +1,6 @@
+import time
+start_time = time.time()
+
 def getNodeVal(node) -> int:
 	"""Function that converts a node to an integer.
 	Ex: [[0,0,0],[1,0,1],[0,1,0]] -> 1*0 + 2*0 + 4*0 + 8*1 + 16*0 + 32*1 + 64*0 + 128*1 + 256*0 -> 168
@@ -55,7 +58,6 @@ def toggle(node, row, col) -> "child":
 
 	return new_node
 
-
 def bfs(start_node, goal_node, max_depth) -> "solution path":
 	"""Breadth-first search (BFS) function.
 
@@ -105,7 +107,7 @@ def bfs(start_node, goal_node, max_depth) -> "solution path":
 				for row in range(len(node)):
 					for col in range(len(node)):
 						child = toggle(node, row, col)
-						new_path = list(path)
+						new_path = list(path) if level != 0 else list([path])
 						new_path.append(child)
 						queue.append(new_path)
 						if child == goal_node:
@@ -116,7 +118,8 @@ def bfs(start_node, goal_node, max_depth) -> "solution path":
 	return []
 
 # Test BFS
-# max_depth = 6
-# start_node = [[1,1,0,1],[1,1,0,0],[0,1,1,0],[0,1,1,0]]
-# goal_node = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
-# print(bfs(start_node, goal_node, max_depth))
+max_depth = 6
+start_node = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0], [1,0,0,0,1], [1,1,0,1,1]]
+goal_node = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+print(bfs(start_node, goal_node, max_depth))
+print("--- %s seconds ---" % (time.time() - start_time))
