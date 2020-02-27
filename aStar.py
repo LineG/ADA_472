@@ -29,16 +29,21 @@ class Node:
         children = []
         next_moves = generate_next_moves(self.board,4)
         for move in next_moves:
-            children.append(Node(self,move,(self.g+1)))
+            g = self.g
+            child_g = g + 1
+            children.append(Node(self,move,(child_g)))
         return children
 
 
-def astar(start_board,end_board):
-    depth = 0
+def astar(start_board,end_board, max_d, max_l):
+
     open_list = []
     closed_list = []
 
-    start = Node(None,start_board,depth)
+    current_d = 0
+    current_l = 1
+
+    start = Node(None,start_board,1)
     open_list.append(start)
     current = start
 
@@ -65,17 +70,21 @@ def astar(start_board,end_board):
 
         #if current is goal stop
         if current.board == end_board:
-            path = []
-            current_node = current
-            while current_node is not None:
-                path.append(current_node.board)
-                print(current_node.f)
-                current_node = current_node.parent
-            return path[::-1],len(path)
+            return find_path(current), "result"
 
         #generate the childre of the current node
         children = current.generate_children()
+
+        current_d = current.g
+        print(current_d)
+        if max_d < current_d:
+            return find_path(current), "no result maxed d"
+
         for child in children:
+
+            current_l += 1
+            if max_l < current_l:
+                return find_path(current), "no result maxed l"
 
             for closed_child in closed_list:
                 if child == closed_child:
@@ -90,6 +99,13 @@ def astar(start_board,end_board):
 
 # for row in range(len(node)):
 	# 	val += base * node[row] * (16 - (row + 1))
+def find_path(current):
+    path = []
+    current_node = current
+    while current_node is not None:
+        path.append(current_node.board)
+        current_node = current_node.parent
+    return path[::-1],len(path)
 
 #heuristics h(n)
 def getNodeVal(node) -> int:
@@ -111,4 +127,4 @@ def getNodeVal(node) -> int:
 
 start_node = [1,1,0,1,1,0,0,1,0,1,0,1,1,0,1,0]
 goal_node = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-print(astar(start_node,goal_node))
+print(astar(start_node,goal_node, 10,11000))
