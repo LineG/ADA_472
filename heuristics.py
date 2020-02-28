@@ -6,15 +6,15 @@ from typing import List
 
 # heuristic h(n)
 # count the number of 0's with 2 or more 1's around it
-def getNodeVal(node: List[List[int]]) -> int:
-    """Function that converts a node to an integer.
-	Ex: [[0,0,0],[1,0,1],[0,1,0]] -> 1*0 + 2*0 + 4*0 + 8*1 + 16*0 + 32*1 + 64*0 + 128*1 + 256*0 -> 168
+def heuristic(node: List[List[int]]) -> int:
+    """Function that estimates the cost of a certain node (number of moves to goal state).
+	Ex: [[0,1,0],[1,1,1],[0,1,0]] -> 1
 
 	Args:
-			node: The node to be converted to a value.
+			node: The node to have it's cost estimated.
 
 	Returns:
-			The return value. Integer representation of node.
+			The return value. Integer representing the cost of a node.
 	"""
     cost = 0
     for i in range(0, len(node)):
@@ -59,4 +59,4 @@ def getNodeVal(node: List[List[int]]) -> int:
 
 
 # used to test the heuristic
-print(getNodeVal([[1, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]))
+# print(heuristic([[1, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]))
