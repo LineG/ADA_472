@@ -112,18 +112,19 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
 
                 # Mark node as explored
                 explored[val] = True
-
+                all_moves = []
                 for row in range(len(node)):
                     for col in range(len(node)):
                         child = toggle(node, row, col)
                         new_path = list(path) if level != 0 else list([path])
                         new_path.append(child)
-                        queue.append(new_path)
+                        all_moves.append(new_path)
                         if child == goal_node:
                             level += 1
                             # print(level)
                             return new_path
-                queue.sort(key=heuristic)
+                all_moves.sort(key=lambda x: heuristic(x[-1]))
+                queue.append(all_moves)
     # No solution found
     return []
 
@@ -132,5 +133,5 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
 max_depth = 6
 start_node = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [1, 0, 0, 0, 1], [1, 1, 0, 1, 1]]
 goal_node = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
-print(bfs(start_node, goal_node, max_depth))
+#print(bfs(start_node, goal_node, max_depth))
 print("--- %s seconds ---" % (time.time() - start_time))
