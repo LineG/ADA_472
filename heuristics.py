@@ -1,10 +1,13 @@
 # Line Ghanem 27280076
 # Anthony Iatropoulos 40028246
 # Mikael Samvelian 40003178
+from typing import List
 
 
-def getNodeVal(node) -> int:
-	"""Function that converts a node to an integer.
+# heuristic h(n)
+# count the number of 0's with 2 or more 1's around it
+def getNodeVal(node: List[List[int]]) -> int:
+    """Function that converts a node to an integer.
 	Ex: [[0,0,0],[1,0,1],[0,1,0]] -> 1*0 + 2*0 + 4*0 + 8*1 + 16*0 + 32*1 + 64*0 + 128*1 + 256*0 -> 168
 
 	Args:
@@ -13,10 +16,47 @@ def getNodeVal(node) -> int:
 	Returns:
 			The return value. Integer representation of node.
 	"""
-	val = 0
-	base = 1
-	for row in range(len(node)):
-		for col in range(len(node[0])):
-			val += base * node[row][col]
-			base = base * 2
-	return val
+    cost = 0
+    for i in range(0, len(node)):
+        for j in range(0, len(node)):
+            # skip if you're a 1
+            if node[i][j] != 0:
+                continue
+            one_count = 0
+
+            # there's a neighbour to your right
+            if 0 < j < len(node) - 1:
+                if node[i][j + 1] == 1:
+                    one_count += 1
+                    pass
+                pass
+
+            # neighbour to your left
+            if 1 < j <= len(node) - 1:
+                if node[i][j - 1] == 1:
+                    one_count += 1
+                    pass
+                pass
+
+            # neighbour above you
+            if 0 < i <= len(node) - 1:
+                if node[i - 1][j] == 1:
+                    one_count += 1
+                    pass
+                pass
+
+            # neighbour below you
+            if i < len(node) - 1:
+                if node[i + 1][j] == 1:
+                    one_count += 1
+                    pass
+                pass
+            if one_count >= 2:
+                cost += 1
+            pass
+        pass
+    return int(cost / 2)
+
+
+# used to test the heuristic
+print(getNodeVal([[1, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]))
