@@ -7,6 +7,7 @@ import time
 start_time = time.time()
 from heuristics import heuristic
 from typing import List
+from collections import deque
 
 
 def getNodeVal(node: List[List[int]]) -> int:
@@ -77,7 +78,7 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
 	Returns:
 			The path (list) taken to reach the node if any.
 	"""
-    queue = [start_node, []]
+    d = deque([start_node, []])
     explored = {}
     level = 0
 
@@ -86,8 +87,8 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
         return []
 
     # Keep exploring while the queue has nodes
-    while len(queue) > 0:
-        path = queue.pop(0)
+    while len(d) > 0:
+        path = d.popleft()
 
         if level == 0:
             node = path
@@ -104,7 +105,7 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
             # Return empty list if max depth was rached
             if max_depth == level:
                 return []
-            queue.append(node)
+            d.append(node)
 
         else:
             val = getNodeVal(node)
@@ -124,7 +125,7 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
                             # print(level)
                             return new_path
                 all_moves.sort(key=lambda x: heuristic(x[-1]))
-                queue.append(all_moves)
+                for path in all_moves: d.append(path)
     # No solution found
     return []
 
@@ -133,5 +134,5 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
 max_depth = 6
 start_node = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [1, 0, 0, 0, 1], [1, 1, 0, 1, 1]]
 goal_node = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
-#print(bfs(start_node, goal_node, max_depth))
+print(bfs(start_node, goal_node, max_depth))
 print("--- %s seconds ---" % (time.time() - start_time))
