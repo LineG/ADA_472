@@ -35,12 +35,11 @@ class Node:
         return children
 
 
-def astar(start_board,end_board, max_d, max_l):
+def astar(start_board,end_board,max_l):
 
     open_list = []
     closed_list = []
 
-    current_d = 0
     current_l = 1
 
     start = Node(None,start_board,1)
@@ -76,15 +75,11 @@ def astar(start_board,end_board, max_d, max_l):
         children = current.generate_children()
 
         current_d = current.g
-        print(current_d)
-        if max_d < current_d:
-            return find_path(current), "no result maxed d"
-
         for child in children:
 
             current_l += 1
             if max_l < current_l:
-                return find_path(current), "no result maxed l"
+                return find_path(current), "no result"
 
             for closed_child in closed_list:
                 if child == closed_child:
@@ -127,4 +122,4 @@ def getNodeVal(node) -> int:
 
 start_node = [1,1,0,1,1,0,0,1,0,1,0,1,1,0,1,0]
 goal_node = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-print(astar(start_node,goal_node, 10,11000))
+print(astar(start_node,goal_node,11000))
