@@ -34,7 +34,7 @@ class Node:
 
     def generate_children(self):
         children = []
-        next_moves = generate_next_moves(np.array(self.board), int(len(self.board) ** (1 / 2)), False)
+        next_moves = generate_next_moves(np.array(self.board), int(len(self.board) ** (1 / 2)))
         for move in next_moves:
             g = self.g
             child_g = g + 1
@@ -54,13 +54,31 @@ def astar(start_board, end_board, max_l):
     open_list = []
     closed_list = []
 
-    start = Node(None, start_board, 1)
-    open_list.append(start)
+    current_l = 1
 
-    while len(open_list) > 0 and len(closed_list) < max_l:
-        open_list.sort(key=lambda node: (node.f, find_first_white_token([node.board[i: i + node.n] for i in range(0, node.n)])))
-        # now the current node should be place last in the closed list
-        current = open_list.pop(0)
+    start = Node(None,start_board,1)
+    open_list.append(start)
+    current = start
+
+    while len(open_list) > 0:
+        if len(closed_list) > max_l:
+            return  get_search_path(closed_list), 'no solution'
+        #set the index of the current node to 0
+        index = 0
+        current = open_list[index]
+
+        i = 0
+        #find the node from the open list with the lowest f
+        for n in open_list:
+            #find the node with the lowest f in the open list
+            #set it as current node
+            if n.f < current.f:
+                current = n
+                index = i
+            i += 1
+
+        #now the current node should be place last in the closed list
+        open_list.pop(index)
         closed_list.append(current)
         # print(current.board)
 
@@ -76,18 +94,15 @@ def astar(start_board, end_board, max_l):
         children = current.generate_children()
 
         for child in children:
-
             for closed_child in closed_list:
                 if child == closed_child:
-                    continue
+                    pass
 
             for node in open_list:
                 if child == node:
                     if child.g > node.g:
                         continue
             open_list.append(child)
-
-    return get_search_path(closed_list), 'no solution'
 
 
 def find_path(current):

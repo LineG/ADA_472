@@ -145,7 +145,7 @@ def generate_graph(b,max_d,n):
 
     return graph
 
-def generate_next_moves(b,n, is_dfs=True):
+def generate_next_moves(b,n):
     next_moves = []
     N = n*n
     #row
@@ -158,7 +158,5 @@ def generate_next_moves(b,n, is_dfs=True):
         b_new = flip_adjacent(b_new,i,n)
         next_moves.append(b_new)
     #return a list
-    if is_dfs:
-        sort_children(next_moves,0,len(next_moves)-1)
-        pass
+    sort_children(next_moves,0,len(next_moves)-1)
     return next_moves
