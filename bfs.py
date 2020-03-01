@@ -117,7 +117,7 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
 
     # Return empty path if start is equal to goal
     if start_node == goal_node:
-        return []
+        return '0\t' + str(goal_node).replace("[", ""). replace(",", "").replace("]", ""), get_search_path({getNodeVal(start_node): (heuristic(start_node), start_node)})
 
     # Keep exploring while the queue has nodes
     while len(d) > 0:
@@ -135,9 +135,9 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
 
         if len(node) == 0:
             level += 1
-            # Return empty list if max depth was rached
+            # Return empty list if max depth was reached
             if max_depth == level:
-                return []
+                return 'no solution', get_search_path(explored)
             d.append(node)
 
         else:
@@ -165,9 +165,3 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
     return 'no solution', get_search_path(explored)
 
 
-# Test BFS
-max_depth = 6
-start_node = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [1, 0, 0, 0, 1], [1, 1, 0, 1, 1]]
-goal_node = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
-# print(bfs(start_node, goal_node, max_depth))
-print("--- %s seconds ---" % (time.time() - start_time))

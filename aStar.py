@@ -24,7 +24,7 @@ class Node:
 
     def generate_children(self):
         children = []
-        next_moves = generate_next_moves(self.board, 4)
+        next_moves = generate_next_moves(self.board, int(len(self.board) ** (1 / 2)))
         for move in next_moves:
             g = self.g
             child_g = g + 1
@@ -70,7 +70,6 @@ def a_star(start_board, end_board, max_l):
         # generate the childre of the current node
         children = current.generate_children()
 
-        current_d = current.g
         for child in children:
 
             current_l += 1
