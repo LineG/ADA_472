@@ -4,7 +4,6 @@
 
 import time
 
-start_time = time.time()
 from heuristics import heuristic
 from typing import List, Dict, Tuple
 from collections import deque
@@ -84,7 +83,8 @@ def toggle(node, row, col) -> "child":
     return new_node
 
 
-def get_solution_path(node_path: List[List[List[int]]]) -> str:
+# gets the solution path by comparing the boards before and after the moves
+def get_solution_path(node_path: List) -> str:
     solution = '0\t' + str(node_path[0]).replace(",", "").replace("[", "").replace("]", "") + '\n'
     for i in range(0, len(node_path) - 1):
         solution += find_move(node_path[i], node_path[i + 1]) + '\t' + str(node_path[i + 1]).replace(",", "").replace(
@@ -94,7 +94,6 @@ def get_solution_path(node_path: List[List[List[int]]]) -> str:
 
 # gets the search path from the closed list.
 # the tuples in the dictionary contain (heuristic, game board) pairs
-
 def get_search_path(nodes_explored: Dict[int, Tuple[int, List[List[int]]]]):
     search_path = ''
     for val in nodes_explored.keys():
