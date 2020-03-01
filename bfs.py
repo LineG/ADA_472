@@ -6,8 +6,24 @@ import time
 
 start_time = time.time()
 from heuristics import heuristic
-from typing import List
+from typing import List, Dict, Tuple
 from collections import deque
+from dfs import find_move
+
+
+# the function used to break the ties between nodes with equal heuristics
+# combined with python list.sort() as a 2nd sorting key function
+# return (i, j) of location of first white or (n, n) if no white tokens are present
+
+def find_first_white_token(node: List[List[int]]) -> Tuple[int, int]:
+    for i in range(0, len(node)):
+        for j in range(0, len(node)):
+            if node[i][j] == 0:
+                return i, j
+            pass
+        pass
+    return len(node), len(node)
+    pass
 
 
 def getNodeVal(node: List[List[int]]) -> int:
@@ -68,6 +84,23 @@ def toggle(node, row, col) -> "child":
     return new_node
 
 
+def get_solution_path(node_path: List[List[List[int]]]) -> str:
+    solution = '0\t' + str(node_path[0]).replace(",", "").replace("[", "").replace("]", "") + '\n'
+    for i in range(0, len(node_path) - 1):
+        solution += find_move(node_path[i], node_path[i + 1]) + '\t' + str(node_path[i + 1]).replace(",", "").replace(
+            "[", "").replace("]", "") + '\n'
+    return solution
+
+
+# gets the search path from the closed list.
+# the tuples in the dictionary contain (heuristic, game board) pairs
+
+def get_search_path(nodes_explored: Dict[int, Tuple[int, List[List[int]]]]):
+    search_path = ''
+    for val in nodes_explored.keys():
+        search_path += str(nodes_explored[val][0]) + ' ' + str(nodes_explored[val][0]) + ' 0\t' + str(nodes_explored[val][1]).replace(", ", "").replace("[", "").replace("]", "") + '\n'
+    return search_path
+
 def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int) -> "solution path":
     """Breadth-first search (BFS) function.
 
@@ -112,7 +145,7 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
             if val not in explored:
 
                 # Mark node as explored
-                explored[val] = True
+                explored[val] = (heuristic(node), node)
                 all_moves = []
                 for row in range(len(node)):
                     for col in range(len(node)):
@@ -123,16 +156,18 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
                         if child == goal_node:
                             level += 1
                             # print(level)
-                            return new_path
-                all_moves.sort(key=lambda x: heuristic(x[-1]))
+                            return get_solution_path(new_path), get_search_path(explored)
+
+                # sorts the list of possible moves and breaks ties with the helper function find_First_white_token
+                all_moves.sort(key=lambda x: (heuristic(x[-1]), find_first_white_token(x[-1])))
                 for path in all_moves: d.append(path)
     # No solution found
-    return []
+    return 'no solution', get_search_path(explored)
 
 
 # Test BFS
 max_depth = 6
 start_node = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [1, 0, 0, 0, 1], [1, 1, 0, 1, 1]]
 goal_node = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
-print(bfs(start_node, goal_node, max_depth))
+# print(bfs(start_node, goal_node, max_depth))
 print("--- %s seconds ---" % (time.time() - start_time))

@@ -18,8 +18,9 @@ def run_dfs(tokens, i):
     else:
         solution.write(dfs_results[0])
     search.write(dfs_results[1])
-    solution.close()
     print('\n')
+    pass
+
 
 def run_bfs(tokens, i):
     n, max_l = int(tokens[0]), int(tokens[2])
@@ -27,7 +28,10 @@ def run_bfs(tokens, i):
     solution = open(f'{i}_bfs_solution.txt', 'w+')
     start_ints = [int(i) for i in tokens[3].strip()]
     starting_board = [start_ints[i:i+n] for i in range(0, len(start_ints), n)]
-    print(bfs(starting_board, [[0 for i in range(0, n)] for i in range(0, n)], max_l))
+    bfs_results = bfs(starting_board, [[0 for i in range(0, n)] for i in range(0, n)], max_l)
+    search.write(bfs_results[1])
+    solution.write(bfs_results[0])
+    pass
 
 
 def main():
