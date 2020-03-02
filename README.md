@@ -4,8 +4,10 @@ https://github.com/LineG/ADA_472
 ### ADA_472
 AI _ WINTER 2020 Concordia University
 ### Project 1
-The current version is only for delivrable 1:
+The current version is only for delivrable 2:
 > DFS algorithm
+> BFS algorithm 
+> A star
 
 ### Team Members
 - Line Ghanem 27280076
