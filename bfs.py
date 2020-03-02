@@ -101,7 +101,7 @@ def get_search_path(nodes_explored: Dict[int, Tuple[int, List[List[int]]]]):
         search_path += str(nodes_explored[val][0]) + ' ' + str(nodes_explored[val][0]) + ' 0\t' + str(nodes_explored[val][1]).replace(", ", "").replace("[", "").replace("]", "") + '\n'
     return search_path
 
-def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int) -> "solution path":
+def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_length: int) -> "solution path":
     """Breadth-first search (BFS) function.
 
 	Args:
@@ -135,8 +135,8 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
 
         if len(node) == 0:
             level += 1
-            # Return empty list if max depth was reached
-            if max_depth == level:
+            # Return empty list if max length was reached
+            if len(explored.keys()) == max_length:
                 return 'no solution', get_search_path(explored)
             d.append(node)
 
