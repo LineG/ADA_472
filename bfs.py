@@ -4,7 +4,6 @@
 
 import time
 
-
 from heuristics import heuristic
 from typing import List, Dict, Tuple
 from collections import deque
@@ -136,8 +135,6 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_length: int
         if len(node) == 0:
             level += 1
             # Return empty list if max length was reached
-            if len(explored.keys()) == max_length:
-                return 'no solution', get_search_path(explored)
             d.append(node)
 
         else:
@@ -146,6 +143,8 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_length: int
 
                 # Mark node as explored
                 explored[val] = (heuristic(node), node)
+                if len(explored.keys()) >= max_length:
+                    return 'no solution', get_search_path(explored)
                 all_moves = []
                 for row in range(len(node)):
                     for col in range(len(node)):
@@ -163,5 +162,3 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_length: int
                 for path in all_moves: d.append(path)
     # No solution found
     return 'no solution', get_search_path(explored)
-
-
