@@ -2,7 +2,7 @@
 # Anthony Iatropoulos 40028246
 # Mikael Samvelian 40003178
 
-from next_moves import generate_next_moves
+from next_moves import generate_next_moves,compare_2_boards
 from dfs import find_move
 from bfs import get_solution_path, find_first_white_token
 from heuristics import heuristic
@@ -22,19 +22,11 @@ class Node:
         self.f = self.h + self.g
 
     def __eq__(self, other):
-        self_board = self.board
-        if isinstance(self.board, np.ndarray):
-            self_board = self.board.tolist()
-
-        other_board = other.board
-        if isinstance(other.board, np.ndarray):
-            other_board = self.board.tolist()
-
-        return self_board == other_board
+        return self.board == other.board
 
     def generate_children(self):
         children = []
-        next_moves = generate_next_moves(np.array(self.board), int(len(self.board) ** (1 / 2)))
+        next_moves = generate_next_moves(self.board, int(len(self.board) ** (1 / 2)))
         for move in next_moves:
             g = self.g
             child_g = g + 1
@@ -61,8 +53,7 @@ def astar(start_board, end_board, max_l):
     current = start
 
     while len(open_list) > 0:
-        if len(closed_list) > max_l:
-            return  get_search_path(closed_list), 'no solution'
+
         #set the index of the current node to 0
         index = 0
         current = open_list[index]
@@ -75,12 +66,19 @@ def astar(start_board, end_board, max_l):
             if n.f < current.f:
                 current = n
                 index = i
+            elif n.f == current.f:
+                val = compare_2_boards(n.board,current.board,len(n.board))
+                if val == 0:
+                    current = n
+                    index = i
             i += 1
 
         #now the current node should be place last in the closed list
         open_list.pop(index)
         closed_list.append(current)
         # print(current.board)
+        if len(closed_list) > max_l:
+                return  get_search_path(closed_list), 'no solution'
 
         # if current is goal stop
         try:
@@ -93,16 +91,26 @@ def astar(start_board, end_board, max_l):
         # generate the children of the current node
         children = current.generate_children()
 
+
         for child in children:
+            flag = True
+
             for closed_child in closed_list:
                 if child == closed_child:
-                    pass
+                    flag = False
 
+            i_n = 0
             for node in open_list:
                 if child == node:
                     if child.g > node.g:
-                        continue
-            open_list.append(child)
+                        flag = False
+                    else:
+                        open_list.pop(i_n)
+                        i_n -= 1
+                i_n += 1
+
+            if flag == True:
+                open_list.append(child)
 
 
 def find_path(current):
