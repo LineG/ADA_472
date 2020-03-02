@@ -4,7 +4,6 @@
 
 import time
 
-
 from heuristics import heuristic
 from typing import List, Dict, Tuple
 from collections import deque
@@ -101,7 +100,7 @@ def get_search_path(nodes_explored: Dict[int, Tuple[int, List[List[int]]]]):
         search_path += str(nodes_explored[val][0]) + ' ' + str(nodes_explored[val][0]) + ' 0\t' + str(nodes_explored[val][1]).replace(", ", "").replace("[", "").replace("]", "") + '\n'
     return search_path
 
-def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int) -> "solution path":
+def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_length: int) -> "solution path":
     """Breadth-first search (BFS) function.
 
 	Args:
@@ -135,9 +134,7 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
 
         if len(node) == 0:
             level += 1
-            # Return empty list if max depth was reached
-            if max_depth == level:
-                return 'no solution', get_search_path(explored)
+            # Return empty list if max length was reached
             d.append(node)
 
         else:
@@ -146,6 +143,8 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
 
                 # Mark node as explored
                 explored[val] = (heuristic(node), node)
+                if len(explored.keys()) >= max_length:
+                    return 'no solution', get_search_path(explored)
                 all_moves = []
                 for row in range(len(node)):
                     for col in range(len(node)):
@@ -163,5 +162,3 @@ def bfs(start_node: List[List[int]], goal_node: List[List[int]], max_depth: int)
                 for path in all_moves: d.append(path)
     # No solution found
     return 'no solution', get_search_path(explored)
-
-
