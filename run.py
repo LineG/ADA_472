@@ -30,6 +30,8 @@ def run_bfs(tokens, i):
     starting_board = [start_ints[i:i+n] for i in range(0, len(start_ints), n)]
     bfs_results = bfs(starting_board, [[0 for i in range(0, n)] for i in range(0, n)], max_l)
     search.write(bfs_results[1])
+    if bfs_results[1] != 'no solution':
+        search.write('0 0 0\t' + n ** 2 * '0 '[:-1])
     solution.write(bfs_results[0])
     pass
 
