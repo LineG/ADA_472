@@ -2,23 +2,22 @@
 # Anthony Iatropoulos 40028246
 # Mikael Samvelian 40003178
 
-
-from typing import List
-import statistics
+from next_moves import generate_next_moves,compare_2_boards
+from dfs import find_move
+from bfs import get_solution_path, find_first_white_token
+from heuristics import heuristic
 import numpy as np
-from next_moves import generate_graph, flip_adjacent
-from next_moves import generate_graph, flip_adjacent, generate_next_moves
-import copy
 
-#we stop of max_l is reached
+# we stop of max_l is reached
+
 
 class Node:
 
     def __init__(self, parent=None, board=None, depth=0):
         self.board = board
         self.parent = parent
-
-        self.h = getNodeVal(board)
+        self.n = int(len(board) ** (1 / 2))
+        self.h = heuristic([board[i: i + self.n] for i in range(0, self.n)])
         self.g = depth
         self.f = self.h + self.g
 
@@ -27,16 +26,23 @@ class Node:
 
     def generate_children(self):
         children = []
-        next_moves = generate_next_moves(self.board,4)
+        next_moves = generate_next_moves(self.board, int(len(self.board) ** (1 / 2)))
         for move in next_moves:
             g = self.g
             child_g = g + 1
-            children.append(Node(self,move,(child_g)))
+            children.append(Node(self, move, (child_g)))
         return children
 
 
-def astar(start_board,end_board,max_l):
+def get_search_path(closed_list):
+    search_path = ''
+    for node in closed_list:
+        search_path += str(node.f) + ' ' + str(node.h) + ' ' + str(node.g) + '\t' + str(node.board).replace(", ", "").replace("[", "").replace("]", "").replace(" ", "") + '\n'
+    return search_path
+    pass
 
+
+def astar(start_board, end_board, max_l):
     open_list = []
     closed_list = []
 
@@ -60,66 +66,59 @@ def astar(start_board,end_board,max_l):
             if n.f < current.f:
                 current = n
                 index = i
+            elif n.f == current.f:
+                val = compare_2_boards(n.board,current.board,len(n.board))
+                if val == 0:
+                    current = n
+                    index = i
             i += 1
 
         #now the current node should be place last in the closed list
         open_list.pop(index)
         closed_list.append(current)
         # print(current.board)
+        if len(closed_list) > max_l:
+                return  get_search_path(closed_list), 'no solution'
 
-        #if current is goal stop
-        if current.board == end_board:
-            return find_path(current), "result"
+        # if current is goal stop
+        try:
+            if current.board == end_board:
+                return get_search_path(closed_list), get_solution_path([np.array(x) for x in find_path(current)[0]])
+        except ValueError:
+            if current.board.tolist() == end_board:
+                return get_search_path(closed_list), get_solution_path([np.array(x) for x in find_path(current)[0]])
 
-        #generate the childre of the current node
+        # generate the children of the current node
         children = current.generate_children()
 
-        current_d = current.g
-        for child in children:
 
-            current_l += 1
-            if max_l < current_l:
-                return find_path(current), "no result"
+        for child in children:
+            flag = True
 
             for closed_child in closed_list:
                 if child == closed_child:
-                    continue
+                    flag = False
 
+            i_n = 0
             for node in open_list:
                 if child == node:
                     if child.g > node.g:
-                        continue
+                        flag = False
+                    else:
+                        open_list.pop(i_n)
+                        i_n -= 1
+                i_n += 1
 
-            open_list.append(child)
+            if flag == True:
+                open_list.append(child)
 
-# for row in range(len(node)):
-	# 	val += base * node[row] * (16 - (row + 1))
+
 def find_path(current):
     path = []
     current_node = current
     while current_node is not None:
         path.append(current_node.board)
         current_node = current_node.parent
-    return path[::-1],len(path)
-
-#heuristics h(n)
-def getNodeVal(node) -> int:
-    val = 0
-    base = 1
-    cluster = 0
-    max_cluster = 0
-    cluster_count = 0
-    for row in range(len(node)):
-        val += base * node[row]
-        # if node[row] == 1:
-        #     cluster += 1
-        # else:
-        #     if (cluster > max_cluster) & (cluster > 2):
-        #         max_cluster == cluster
-        #         cluster_count += 1
-    return val + max_cluster + cluster_count
+    return path[::-1], len(path)
 
 
-start_node = [1,1,0,1,1,0,0,1,0,1,0,1,1,0,1,0]
-goal_node = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-print(astar(start_node,goal_node,11000))

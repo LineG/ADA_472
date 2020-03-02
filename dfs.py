@@ -3,15 +3,19 @@
 # Mikael Samvelian 40003178
 
 
-from typing import List
+from typing import List, Union
 import statistics
 import numpy as np
-from next_moves import generate_graph, flip_adjacent
-from next_moves import generate_graph, flip_adjacent, generate_next_moves
-import copy
+from next_moves import generate_next_moves
 
 
-def find_move(before: np.array, after: np.array, is_goal: bool = False) -> str:
+def find_move(before: Union[np.array, List[List[int]]], after: Union[np.array, List[List[int]]]) -> str:
+    if isinstance(before, list):
+        before = np.array([token for sublist in before for token in sublist])
+
+    if isinstance(after, list):
+        after = np.array([token for sublist in after for token in sublist])
+
     difference = abs(before - after)
     n = int(len(difference) ** (1 / 2))
     difference = np.split(difference, n)
@@ -54,7 +58,7 @@ def children_node(graph, b):
 def get_search_path(explored: List[str]) -> str:
     search_path = ''
     for node in explored:
-        search_path += '0 0 0\t' + node + '\n'
+        search_path += '0 0 0\t' + node.replace(" ", "") + '\n'
     return search_path
     pass
 
